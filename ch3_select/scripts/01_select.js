@@ -11,7 +11,17 @@ firstP.classed("big", true).text("This is paragraph");
 
 allParagraphs.style("font-weight", "bold");
 
-d3.select(".big")
-    .attr("title", "Tooltip")
-    .style("font-variant", "small-caps")
-    .html("This is a <b>bold</b> paragraph.");
+// d3.select(".big")
+//     .attr("title", "Tooltip")
+//     .style("font-variant", "small-caps")
+//     .html("This is a <b>bold</b> paragraph.");
+
+const numbers = [6, 2, 5, 7, 9];
+const selection = d3.select("#section")
+.selectAll("p")
+.data(numbers);
+const newSelection = selection.enter();
+console.log(selection);
+console.log(newSelection);
+newSelection.append("p")
+.text(d => d)
