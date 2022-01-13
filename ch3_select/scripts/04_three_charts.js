@@ -74,6 +74,8 @@ function init() {
     d3.selectAll("button")
     .on("click", function() {
         chart.current = charts.filter(c => c.key == this.id)[0];
+        d3.select("#chart")
+        .text(chart.current.title)
         draw();
     })
 }
@@ -83,16 +85,18 @@ function draw() {
     setupView();
     svg.selectAll("g.entry")
     .data(planets)
-    .each(function (d) {
+    .each(function (d, i) {
         d3.select(this).select(".label.category")
         .text(d.name);
         d3.select(this).select(".bar")
         .transition()
+        .delay(20 * i)
         .attr("width", barScale(d[chart.current.key]))
         .style("fill", d3.color(chart.current.color).darker(colorScale(d[chart.current.key])));
 
         d3.select(this).select(".label.value")
         .transition()
+        .delay(20 * i)
         .attr("x", barScale(d[chart.current.key]) + 105)
         .text(format(d[chart.current.key]) + " AU");
     })
