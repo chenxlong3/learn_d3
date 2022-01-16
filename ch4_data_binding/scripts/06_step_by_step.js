@@ -34,6 +34,7 @@ function configureView() {
     const maxDiameter = d3.max(current.planet.satellites, d => d.diameterKm);
     current.moons = current.planet.satellites.filter(s => s.diameterKm > maxDiameter / 50);
 
+    current.moons.sort((a, b) => d3.descending(a.diameterKm, b.diameterKm));
     const sumDiameters = d3.sum(current.moons, d => d.diameterKm);
 
     const horizSpace = WIDTH - (MARGIN_PLANET + MARGIN_W * 2 + current.moons.length * MARGIN_MOON);
@@ -57,4 +58,25 @@ function draw() {
         .datum(current.planet)
         .attr("r", d => scale(d.diameterKm) / 2)
         .attr("cx", d => -(MARGIN_W + scale(d.diameterKm) / 2));
+    d3.select("#planetName").text(() => current.planet.name);
+
+    current.moons.forEach(function (moon, i) {
+        let space = 0;
+        if (i > 0) {
+            let previous = current.moons[i - 1];
+            space = previous.cx + scale(previous.diameterKm) / 2 + MARGIN_MOON;
+        }
+        moon.cx = space + scale(moon.diameterKm) / 2;
+        console.log(moon.name, moon.cx);
+    })
+
+    plane.selectAll("circle.moon")
+        .data(current.moons)
+        .enter()
+        .append("circle")
+        .attr("class", "moon")
+        .attr("cx", d => d.cx)
+        .attr("r", d => scale(d.diameterKm) / 2);
+
+
 }

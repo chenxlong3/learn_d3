@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,15 +9,26 @@
 </head>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <style>
-    svg {border: solid 1px gray;}
-    * {font-family: "Yanone Kaffesatz", sans-serif;}
-    text {font-size: 11px;}
+    svg {
+        border: solid 1px gray;
+    }
+
+    * {
+        font-family: "Yanone Kaffesatz", sans-serif;
+    }
+
+    text {
+        font-size: 11px;
+    }
 </style>
+
 <body>
+    <h1>The largest moons of <span id="planetName"></span></h1>
     <div id="container" width="500" height="300">
         <svg height="100%" width="100%" id="moons"></svg>
     </div>
     <form></form>
     <script src="scripts/06_step_by_step.js"></script>
 </body>
+
 </html>
