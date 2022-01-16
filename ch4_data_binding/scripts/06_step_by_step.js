@@ -25,9 +25,27 @@ const plane = svg.append("g")
 d3.json("../../data/sol_2016.json")
     .then(function (data) {
         app.planets = data.planets.filter(p => +p.id.substring(1) >= 3 && +p.id.substring(1) <= 8);
+        init();
         configureView();
         draw();
     })
+
+function init() {
+    d3.select("form")
+        .data(app.planets)
+        .enter()
+        .append("button")
+        .attr("type", "button")
+        .attr("id", d => d.id)
+        .text(d => d.name)
+        .on("click", function (d) {
+            current.id = d.id;
+            configureView();
+            draw();
+        });
+    plane.append("circle")
+        .attr("class", "planet");
+}
 
 function configureView() {
     current.planet = app.planets.filter(p => p.id == current.id)[0];
@@ -45,6 +63,8 @@ function configureView() {
     console.log("Planet", current.planet);
     console.log("Largest moon diameter", maxDiameter);
     console.log("Selected moons", current.moons);
+    d3.selectAll("button").property("disabled", false);
+    d3.select("button#" + current.id).property("disabled", true);
 }
 
 function draw() {
@@ -53,8 +73,7 @@ function draw() {
         .attr("x2", WIDTH)
         .style("stroke", "red");
 
-    plane.append("circle")
-        .attr("class", "planet")
+    plane.select(".planet")
         .datum(current.planet)
         .attr("r", d => scale(d.diameterKm) / 2)
         .attr("cx", d => -(MARGIN_W + scale(d.diameterKm) / 2));
@@ -77,6 +96,26 @@ function draw() {
         .attr("class", "moon")
         .attr("cx", d => d.cx)
         .attr("r", d => scale(d.diameterKm) / 2);
+
+    const moons = plane.selectAll("g.moon")
+        .data(current.moons)
+        .enter()
+        .append("g")
+        .attr("class", "moon")
+        .attr("transform", d => `translate(${[d.cx, 0]})`)
+        .each(function () {
+            const moon = d3.select(this);
+            moon.append("circle")
+                .attr("r", d => scale(d.diameterKm) / 2);
+            moon.append("text")
+                .text(d => d.name)
+                .attr("transform", function (d) {
+                    const x = scale(d.diameterKm / 2) + MARGIN_MOON;
+                    const y = this.getBBox().height / 4;
+                    return `rotate(-90) translate(${[x, y]})`;
+                });
+        })
+
 
 
 }
