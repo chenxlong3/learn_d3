@@ -59,7 +59,7 @@
             // only include planets with moons (p3 to p8)
             app.planets = data.planets
                             .filter(p => +p.id.substring(1) >= 3
-                    && +p.id.substring(1) <= 8);
+                                      && +p.id.substring(1) <= 8);
             init(); // add this line
             configureView();
             draw();
@@ -76,10 +76,10 @@
             .attr("id", d => d.id)
             .text(d => d.name)
             .on("click", function(d) {
-                    current.id = d.id;
-                    configureView();
-                    draw();
-                });
+                current.id = d.id;
+                configureView();
+                draw();
+            });
 
         // 2) Add circle for the planets
         plane.append("circle")
@@ -137,31 +137,41 @@
         // 1) Draw a guide line showing the orbital plane
         // plane.append("line").attr("x1",0).attr("x2",WIDTH) .style("stroke","red");
 
-        // 2) update the planet
+        // 2) Planet: update the planet (no elements to add or remove)
         plane.select(".planet")
             .datum(current.planet)
             .attr("r", d => scale(d.diameterKm)/2)
             .attr("cx", d => -(MARGIN_W + scale(d.diameterKm)/2))
             .style("fill", d => current.color);
 
-        // 3) draw the moons
-        plane.selectAll("g.moon")
-            .data(current.moons)
-            .enter()
-            .append("g").attr("class", "moon")
-            .attr("transform", d => `translate(${[d.cx,0]})`)
-            .each(function() {  // each g object contains a circle and text
-                const moon = d3.select(this); // current group
-                moon.append("circle")
-                    .attr("r", d => scale(d.diameterKm)/2);
-                moon.append("text")
-                    .text(d => d.name)
-                    .attr("transform", function(d) {
-                        const x = scale(d.diameterKm/2) + MARGIN_MOON;
-                        const y = this.getBBox().height/4;
-                        return `rotate(-90) translate(${[x,y]})`;
+        // 3) Moons: general update pattern
+        // a) the update selection (bind new data to each existing element)
+        const updateMoons = plane.selectAll("g.moon").data(current.moons)
+
+        // b) the enter selection (adds new elements) - may be initially empty
+        const enterMoons =
+                updateMoons.enter()
+                    .append("g").attr("class", "moon")
+                    .each(function() {
+                        const moon = d3.select(this);
+                        moon.append("circle");
+                        moon.append("text")
                     });
+
+        // c) the merged selection (updates data values)
+        enterMoons.merge(updateMoons)
+            .attr("transform", d => `translate(${[d.cx,0]})`)
+            .each(function() {
+                const moon = d3.select(this);
+                moon.select("circle").attr("r", d => scale(d.diameterKm)/2);
+                moon.select("text").text(d => d.name)
+                .attr("transform", function(d) {
+                    const x = scale(d.diameterKm/2) + MARGIN_MOON;
+                    const y = this.getBBox().height/4;
+                    return `rotate(-90) translate(${[x,y]})`;
+                });
             });
+
     }
 
 

@@ -20,6 +20,22 @@
     text {
         font-size: 11px;
     }
+
+    .tooltip {opacity: 0;}
+    .tooltip rect {
+            fill: rgba(255,255,255,.8);
+            stroke: gray;
+            stroke-width: 2px;
+            height: 30px;
+            width: 100px;
+            rx: 5px;
+            ry: 5px;
+            pointer-events: none;
+        }
+    .tooltip text {
+        transform: translate(18px,18px);
+    }
+
 </style>
 
 <body>
