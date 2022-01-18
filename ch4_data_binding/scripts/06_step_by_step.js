@@ -28,6 +28,13 @@ const svg = d3.select("#moons")
 const plane = svg.append("g")
 .attr("transform", `translate(${[MARGIN_PLANET, HEIGHT/2]})`);
 
+const tooltip = plane.append("g")
+.attr("class", "tooltip")
+tooltip.append("rect")
+.attr("rx", 5)
+.attr("ry", 5)
+tooltip.append("text");
+
 d3.json("../../data/sol_2016.json")
 .then(function(data) {
     app.planets = data.planets.filter(p => (+p.id.substring(1) >= 3 && +p.id.substring(1) <= 8));
@@ -121,8 +128,25 @@ function draw() {
             const y = this.getBBox().height/4;
             return `rotate(-90) translate(${[x,y]})`;
         })
-        .on("click", )
-    });
+    })
+    .on("mouseover", showTooltip)
+    .on("mouseout", hideTooltip)
     updateMoons.exit().remove();
     
+}
+
+function showTooltip(event, d) {
+    const pos = d.cx ? `translate(${[d.cx, scale(d.diameterKm/4)]})` : "translate(-75,50)";
+    d3.select(".tooltip").raise()
+    .attr("transform", pos)
+    .transition()
+    .style("opacity", 1)
+    .select("text")
+    .text("Diameter: " + d.diameterKm + " km");
+}
+
+function hideTooltip() {
+    d3.select(".tooltip")
+    .transition()
+    .style("opacity", 0);
 }
