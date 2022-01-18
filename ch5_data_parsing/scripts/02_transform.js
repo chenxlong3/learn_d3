@@ -1,1 +1,21 @@
 const merge = d3.merge([[3, 4], [5, 6]]);
+const concat = [3, 4].concat([5, 6]);
+const permuted = d3.permute([1,2,3,4], [0,3,0,3,0,3]);
+const cross = d3.cross([3, 4], [3, 5]);
+const cross2 = d3.cross([3,4], [3,5], (a,b) => a*b);
+const pairs = d3.pairs([3, 4, 5, 6]);
+const pairs2 = d3.pairs([3, 4, 5, 6], (a, b) => (a+b));
+const zip = d3.zip([1,2,3], [4,5,6], [9,8,7,6]);
+const transpose = d3.transpose([[1,2,3],[4,5,6],[9,8,7]]);
+const shuffle = d3.shuffle([1,2,3,4,5,6,7,8,9]);
+
+console.log(merge);
+console.log(concat);
+console.log(permuted);
+console.log(cross);
+console.log(cross2);
+console.log(pairs);
+console.log(pairs2);
+console.log(zip);
+console.log(transpose);
+console.log(shuffle);
