@@ -15,7 +15,14 @@ const groupByDirector = d3.group(movies, d => d.director);
 
 const sortedMovies = movies.sort((a, b) => d3.ascending(a.year, b.year));
 const groupByYear = d3.group(sortedMovies, d => d.year);
-
+const byYearandDirector = d3.group(movies, d => d.year, d => d.director);
+const byYearRollUp = d3.rollup(movies, v => v.map(d => d.title + `(${d.director})`), d => d.year);
+const arr_1 = Array.from(byYearRollUp);
+const arr_2 = [...byYearRollUp]
 
 console.log(groupByDirector);
 console.log(groupByYear);
+console.log(byYearandDirector);
+console.log(byYearRollUp);
+console.log(arr_1);
+console.log(arr_2);
